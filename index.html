@@ -508,6 +508,106 @@
         display: inline-block;
       }
 
+      .unit-count {
+        margin-left: auto;
+        margin-right: 8px;
+        background: rgba(11, 32, 56, 0.06);
+        color: var(--navy-800);
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .area-count {
+        display: inline-block;
+        background: #e7edf3;
+        color: var(--ink-soft);
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 99px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .unit-card {
+        transition: 0.25s;
+      }
+      .unit-card:hover {
+        box-shadow: var(--shadow-md);
+        border-color: #d8e2ee;
+        transform: translateY(-2px);
+      }
+      @keyframes chipPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(240, 149, 74, 0.45);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(240, 149, 74, 0);
+        }
+      }
+      .app-chip.star {
+        animation: chipPulse 2.2s ease-in-out infinite;
+      }
+      .app-chip.hidden {
+        display: none;
+      }
+      .toolbar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+      .search-box {
+        position: relative;
+        flex: 1;
+        min-width: 240px;
+        max-width: 360px;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 12px 16px 12px 40px;
+        border-radius: 12px;
+        border: 1px solid var(--grey-line);
+        background: #fff;
+        font-size: 14px;
+        font-family: inherit;
+        color: var(--ink);
+        box-shadow: var(--shadow-sm);
+        outline: none;
+        transition: 0.2s;
+      }
+      .search-box input:focus {
+        border-color: var(--sky);
+        box-shadow: 0 0 0 3px rgba(58, 160, 209, 0.15);
+      }
+      .search-box .search-ico {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--grey-mid);
+        font-size: 14px;
+        pointer-events: none;
+      }
+      .toolbar-btn {
+        background: #fff;
+        border: 1px solid var(--grey-line);
+        border-radius: 12px;
+        padding: 11px 18px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--navy-800);
+        cursor: pointer;
+        transition: 0.18s;
+      }
+      .toolbar-btn:hover {
+        background: #eef4fb;
+        border-color: #c9dbee;
+      }
+
       /* ---------- Project cards ---------- */
       .proj-grid {
         display: grid;
@@ -1105,6 +1205,25 @@
           construyendo ahora mismo — tócalas para ver el detalle.
         </p>
 
+        <div class="toolbar-row reveal">
+          <div class="search-box">
+            <span class="search-ico">🔍</span>
+            <input
+              type="text"
+              id="appSearch"
+              placeholder="Buscar una aplicación o área..."
+              oninput="filterApps(this.value)"
+            />
+          </div>
+          <button
+            class="toolbar-btn"
+            id="toggleAllBtn"
+            onclick="toggleAllUnits()"
+          >
+            Expandir todo
+          </button>
+        </div>
+
         <div class="orgchart reveal">
           <div class="gerencia-pill">GERENCIA DE OPERACIONES</div>
           <div class="connector"></div>
@@ -1165,10 +1284,22 @@
           frente a construirlo con nuestro propio equipo.
         </p>
         <div class="compare-grid reveal" id="compareGrid"></div>
+
         <div class="compare-note reveal">
           <b>Resultado:</b> el mismo alcance que Delfosti cotizó en $43,690 y 18
           semanas, lo entregamos con el equipo interno de SAASA por
           <b>S/ 3,000</b> en <b>4 semanas</b>, con mantenimiento a costo cero.
+        </div>
+        <p class="eyebrow reveal" style="margin-top: 64px">Quick win · RMS</p>
+        <h2 class="section-title reveal">
+          Por qué construimos RMS internamente
+        </h2>
+        <p class="section-sub reveal">
+          Mismo ejercicio de comparación aplicado al proyecto RMS.
+        </p>
+        <div class="compare-grid reveal" id="compareGridRMS"></div>
+        <div class="compare-note reveal" id="compareNoteRMS">
+          <b>Resultado:</b> [PENDIENTE — completar con el dato real].
         </div>
       </div>
     </section>
@@ -1295,9 +1426,8 @@
                 { n: "Pizarra del control de recursos" },
                 { n: "App FBO estaciones SSR" },
                 { n: "App de contingencias", star: true, key: "contingencias" },
-                { n: "App silla de ruedas", star: true, key: "sillaruedas" },
                 { n: "BDS", star: true, key: "bds" },
-                { n: "PRM Beacons", star: true, key: "prm" },
+                { n: "PRM", star: true, key: "prm" },
               ],
             },
           ],
@@ -1387,7 +1517,7 @@
           key: "contingencias2",
           name: "App de Contingencias · Multi-estación (v2)",
           unit: "Unidad FBO",
-          badge: "Iniciando",
+          badge: "Pendiente de iniciar",
           badgeClass: "b-progress",
           stages: [
             "Kickoff",
@@ -1410,10 +1540,10 @@
           key: "brs",
           name: "BRS",
           unit: "Rampa · CCO",
-          badge: "Fase 1 en negociación",
+          badge: "Fase 2 en negociación",
           badgeClass: "b-invest",
-          stages: ["Fase 1", "Doc. y Legal", "Fase 2", "Mantenim."],
-          stageState: ["active", "pending", "pending", "pending"],
+          stages: ["Fase 1", "Fase 2", "Fase 3", "Mantenim.", "Doc. y Legal"],
+          stageState: ["active", "pending", "pending", "active", "pending"],
           costs: [
             "Fase 1: S/ 1,200",
             "Doc. y Legal: ~S/ 39,000 (pendiente)",
@@ -1435,7 +1565,7 @@
           key: "prm",
           name: "PRM",
           unit: "Rampa · CCO",
-          badge: "En ejecución",
+          badge: "Fase 2 en negociación",
           badgeClass: "b-invest",
           stages: [
             "Kickoff",
@@ -1444,8 +1574,17 @@
             "Sprint 2 (9 sem.)",
             "Sprint 3",
             "Mantenim.",
+            "Doc. y Legal",
           ],
-          stageState: ["done", "done", "done", "active", "pending", "pending"],
+          stageState: [
+            "done",
+            "done",
+            "done",
+            "active",
+            "pending",
+            "pending",
+            "pending",
+          ],
           costs: [
             "Sprint 1 – Fase 1: S/ 19,650",
             "Sprint 1 – Fase 2: S/ 18,900",
@@ -1453,8 +1592,8 @@
             "Mantenimiento: S/ 4,319.30",
           ],
           docs: { codigo: false, memoria: false, manual: false },
-          tasks: ["Documentación funcional para la mejoras del spring 2"],
-          note: "El proyecto con mayor inversión ejecutada hasta el momento. Ya está operando y recibe mejoras continuas — el Sprint 2 lleva 9 semanas de trabajo.",
+          tasks: ["Documentación funcional para la mejora del sprint 2"],
+          note: "La aplicación ya está operando y recibe mejoras continuas — el Sprint 2 lleva 9 semanas de trabajo.",
         },
         {
           key: "rms",
@@ -1555,19 +1694,48 @@
         },
       ];
 
+      const VENDORS_RMS = [
+        {
+          name: "Proveedor A",
+          inv: "$ 0 (por definir)",
+          mant: "Por definir",
+          time: "Por definir",
+        },
+        {
+          name: "Proveedor B",
+          inv: "$ 0 (por definir)",
+          mant: "Por definir",
+          time: "Por definir",
+        },
+        {
+          name: "Proveedor C",
+          inv: "$ 0 (por definir)",
+          mant: "Por definir",
+          time: "Por definir",
+        },
+        {
+          name: "SAASA (interno)",
+          inv: "$ 500 (código fuente)",
+          mant: "S/ 0",
+          time: "Por definir",
+          win: true,
+        },
+      ];
+
       /* ============ RENDER ============ */
 
       function renderUnits() {
         const row = document.getElementById("unitsRow");
         row.innerHTML = UNITS.map(
           (u) => `
-    <div class="unit-card" data-unit="${u.id}">
+     <div class="unit-card" data-unit="${u.id}">
       <div class="unit-head" onclick="toggleUnit('${u.id}')">
         <div class="unit-icon" style="background:${u.color}">${u.icon}</div>
         <div>
           <h4>${u.name}</h4>
           <span class="owner">${u.owner}</span>
         </div>
+        <span class="unit-count">${u.areas.reduce((s, a) => s + a.apps.length, 0)} apps</span>
         <span class="chevron">▾</span>
       </div>
       <div class="unit-body">
@@ -1575,7 +1743,7 @@
           .map(
             (a) => `
           <div class="area-block">
-            <p class="area-title">${a.name}</p>
+            <p class="area-title">${a.name}<span class="area-count">${a.apps.length}</span></p>
             <p class="area-owner">${a.owner}</p>
             ${a.apps.length ? `<div class="app-list">${a.apps.map((app) => appChip(app)).join("")}</div>` : `<p style="font-size:12px;color:var(--grey-mid);margin:0;">Sin aplicaciones asignadas</p>`}
             ${a.sub ? `<div class="gha-sub"><p class="area-owner" style="margin-bottom:6px;">Aerolíneas atendidas</p><div class="app-list">${a.sub.map((s) => `<span class="app-chip">${s}</span>`).join("")}</div></div>` : ""}
@@ -1599,6 +1767,39 @@
       function toggleUnit(id) {
         const card = document.querySelector(`.unit-card[data-unit="${id}"]`);
         card.classList.toggle("open");
+      }
+
+      function toggleAllUnits() {
+        const cards = document.querySelectorAll(".unit-card");
+        const btn = document.getElementById("toggleAllBtn");
+        const anyClosed = [...cards].some((c) => !c.classList.contains("open"));
+        cards.forEach((c) => c.classList.toggle("open", anyClosed));
+        btn.textContent = anyClosed ? "Colapsar todo" : "Expandir todo";
+      }
+
+      function filterApps(query) {
+        const q = query.trim().toLowerCase();
+        document.querySelectorAll(".unit-card").forEach((card) => {
+          let unitHasMatch = false;
+          card.querySelectorAll(".area-block").forEach((block) => {
+            let areaHasMatch = false;
+            block.querySelectorAll(".app-chip").forEach((chip) => {
+              const text = chip.textContent.toLowerCase();
+              const match = q === "" || text.includes(q);
+              chip.classList.toggle("hidden", !match);
+              if (match) areaHasMatch = true;
+            });
+            const areaTitle =
+              block.querySelector(".area-title")?.textContent.toLowerCase() ||
+              "";
+            const titleMatch = q !== "" && areaTitle.includes(q);
+            block.style.display =
+              q === "" || areaHasMatch || titleMatch ? "" : "none";
+            if (areaHasMatch || titleMatch) unitHasMatch = true;
+          });
+          if (q !== "") card.classList.toggle("open", unitHasMatch);
+          card.style.display = q === "" || unitHasMatch ? "" : "none";
+        });
       }
 
       function stageBadgeClass(state) {
@@ -1667,6 +1868,21 @@
         ).join("");
       }
 
+      function renderVendorsRMS() {
+        const grid = document.getElementById("compareGridRMS");
+        if (!grid) return;
+        grid.innerHTML = VENDORS_RMS.map(
+          (v) => `
+    <div class="vendor-card ${v.win ? "win" : ""}">
+      <div class="vendor-name">${v.name}</div>
+      <div class="v-metric"><div class="k">Inversión</div><div class="v">${v.inv}</div></div>
+      <div class="v-metric"><div class="k">Mantenimiento</div><div class="v">${v.mant}</div></div>
+      <div class="v-metric"><div class="k">Tiempo</div><div class="v">${v.time}</div></div>
+    </div>
+  `,
+        ).join("");
+      }
+
       /* ============ MODAL ============ */
 
       function openProject(key) {
@@ -1723,6 +1939,7 @@
       renderProjects();
       renderMethod();
       renderVendors();
+      renderVendorsRMS();
       // open first unit by default
       document.querySelector(".unit-card")?.classList.add("open");
 
