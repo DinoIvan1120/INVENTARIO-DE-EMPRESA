@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario de Proyectos e Innovación · Gerencia de Operaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#081524;
+    --navy-900:#0b2038;
+    --navy-800:#12315a;
+    --navy-700:#1a3f70;
+    --sky:#3aa0d1;
+    --amber:#f0954a;
+    --amber-dark:#d97a2f;
+    --gold:#f0c343;
+    --green:#3aa672;
+    --grey-line:#d7dee6;
+    --grey-mid:#8b97a6;
+    --ink:#152238;
+    --ink-soft:#4b5972;
+    --paper:#f4f6f9;
+    --card:#ffffff;
+    --radius:16px;
+    --shadow-sm: 0 1px 2px rgba(11,32,56,0.06), 0 1px 1px rgba(11,32,56,0.04);
+    --shadow-md: 0 8px 24px rgba(11,32,56,0.10);
+    --shadow-lg: 0 20px 48px rgba(11,32,56,0.18);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- Layout helpers ---------- */
+  .wrap{max-width:1220px;margin:0 auto;padding:0 32px;}
+  section{padding:96px 0;}
+  .eyebrow{
+    text-transform:uppercase;letter-spacing:.14em;font-size:12.5px;font-weight:700;
+    color:var(--amber-dark);margin:0 0 14px;
+  }
+  .section-title{font-size:clamp(28px,3.6vw,42px);font-weight:700;margin:0 0 14px;line-height:1.12;color:var(--navy-950);}
+  .section-sub{font-size:17px;color:var(--ink-soft);max-width:640px;line-height:1.55;margin:0 0 48px;}
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:80;
+    background:rgba(8,21,36,0.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav-inner{max-width:1220px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:15px;letter-spacing:.01em;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--amber),var(--gold));
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+  }
+  .brand small{display:block;font-weight:500;color:#9fb2c9;font-size:11.5px;letter-spacing:.03em;}
+  nav.links{display:flex;gap:4px;}
+  nav.links a{
+    color:#c7d3e0;text-decoration:none;font-size:14px;font-weight:600;padding:9px 16px;border-radius:99px;
+    transition:.18s;
+  }
+  nav.links a:hover, nav.links a.active{color:#fff;background:rgba(255,255,255,0.08);}
+  .nav-toggle{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:6px;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:
+      radial-gradient(1100px 520px at 82% -10%, rgba(58,160,209,0.25), transparent 60%),
+      radial-gradient(900px 500px at 8% 110%, rgba(240,149,74,0.20), transparent 60%),
+      linear-gradient(180deg,var(--navy-950),var(--navy-900) 60%, #0e2a48);
+    color:#fff;padding:88px 0 110px;position:relative;overflow:hidden;
+  }
+  .hero-grid{
+    position:absolute;inset:0;opacity:.08;
+    background-image:linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px, transparent 1px);
+    background-size:64px 64px;mask-image:radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
+  }
+  .hero-inner{position:relative;z-index:2;}
+  .hero-tag{
+    display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);padding:7px 16px 7px 8px;border-radius:99px;font-size:13px;font-weight:600;
+    color:#dce6f2;margin-bottom:28px;
+  }
+  .hero-tag span.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;box-shadow:0 0 0 4px rgba(240,149,74,.25);}
+  .hero h1{font-size:clamp(36px,5.4vw,64px);line-height:1.04;font-weight:700;margin:0 0 22px;max-width:820px;letter-spacing:-.01em;}
+  .hero h1 em{font-style:normal;color:var(--amber);}
+  .hero p.lead{font-size:18px;color:#b7c6d8;max-width:600px;line-height:1.6;margin:0 0 48px;}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(255,255,255,0.1);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);}
+  .stat{background:rgba(11,32,56,0.55);padding:26px 22px;text-align:left;}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;color:#fff;line-height:1;}
+  .stat .lbl{font-size:12.5px;color:#9fb2c9;margin-top:8px;font-weight:600;letter-spacing:.02em;}
+
+  /* ---------- Progress bars (Avance) ---------- */
+  .progress-panel{
+    background:var(--card);border-radius:var(--radius);padding:40px 44px;box-shadow:var(--shadow-md);
+    display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;
+  }
+  .bars{display:flex;flex-direction:column;gap:18px;}
+  .bar-row{display:grid;grid-template-columns:190px 1fr 52px;align-items:center;gap:14px;}
+  .bar-row .label{font-size:13.5px;font-weight:600;color:var(--ink-soft);}
+  .bar-track{height:12px;background:#e7edf3;border-radius:99px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;width:0;background:linear-gradient(90deg,var(--sky),var(--navy-700));transition:width 1.1s cubic-bezier(.16,1,.3,1);}
+  .bar-fill.warn{background:linear-gradient(90deg,var(--amber),var(--amber-dark));}
+  .bar-row .pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13.5px;color:var(--navy-900);text-align:right;}
+  .progress-note{border-left:3px solid var(--amber);padding-left:22px;}
+  .progress-note h4{margin:0 0 10px;font-size:19px;color:var(--navy-950);}
+  .progress-note p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.6;}
+
+  /* ---------- Org chart ---------- */
+  .orgchart{display:flex;flex-direction:column;gap:26px;}
+  .gerencia-pill{
+    align-self:center;background:var(--navy-950);color:#fff;font-weight:700;padding:14px 34px;border-radius:12px;
+    font-size:15px;letter-spacing:.02em;box-shadow:var(--shadow-md);
+  }
+  .connector{width:2px;height:26px;background:var(--grey-line);align-self:center;}
+  .units-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .unit-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid #e7edf3;overflow:hidden;}
+  .unit-head{
+    padding:20px 22px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;
+    background:linear-gradient(180deg,#fbfcfd,#f2f5f8);border-bottom:1px solid #e7edf3;
+  }
+  .unit-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff;}
+  .unit-head h4{margin:0;font-size:15px;color:var(--navy-950);}
+  .unit-head span.owner{display:block;font-size:12px;color:var(--ink-soft);font-weight:500;margin-top:2px;}
+  .unit-head .chevron{margin-left:auto;color:var(--grey-mid);transition:.25s;font-size:13px;}
+  .unit-card.open .chevron{transform:rotate(180deg);}
+  .unit-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+  .unit-card.open .unit-body{max-height:2400px;}
+  .area-block{padding:16px 22px;border-bottom:1px solid #eef2f6;}
+  .area-block:last-child{border-bottom:none;}
+  .area-title{font-size:13px;font-weight:700;color:var(--navy-800);margin:0 0 4px;}
+  .area-owner{font-size:11.5px;color:var(--grey-mid);margin:0 0 10px;font-weight:500;}
+  .app-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .app-chip{
+    display:inline-flex;align-items:center;gap:6px;background:#eef4fb;color:var(--navy-800);
+    font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid #dde8f3;
+  }
+  .app-chip.star{
+    background:linear-gradient(135deg,#fff4e2,#ffe6c2);border-color:#f2cd8f;color:#8a5713;cursor:pointer;
+  }
+  .app-chip.star:hover{box-shadow:0 0 0 2px rgba(240,149,74,.35);}
+  .app-chip .star-ico{color:var(--amber-dark);font-size:12px;}
+  .gha-sub{margin-top:10px;padding-top:10px;border-top:1px dashed #e3e9ef;}
+  .gha-sub .app-list{margin-top:6px;}
+
+  .legend-row{display:flex;align-items:center;gap:18px;margin-top:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+  .legend-row .swatch{display:inline-flex;align-items:center;gap:7px;}
+  .legend-row .swatch i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  /* ---------- Project cards ---------- */
+  .proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .proj-card{
+    background:var(--card);border-radius:var(--radius);padding:24px 24px 22px;box-shadow:var(--shadow-sm);
+    border:1px solid #e7edf3;cursor:pointer;transition:.2s;display:flex;flex-direction:column;gap:16px;
+  }
+  .proj-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:#d8e2ee;}
+  .proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .proj-top h4{margin:0;font-size:17px;color:var(--navy-950);}
+  .proj-unit{font-size:11.5px;color:var(--grey-mid);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.03em;}
+  .badge{font-size:11px;font-weight:700;padding:5px 11px;border-radius:99px;white-space:nowrap;flex-shrink:0;}
+  .badge.b-live{background:#e3f5ec;color:#1c7a4e;}
+  .badge.b-progress{background:#fdecdc;color:#9a5218;}
+  .badge.b-pending{background:#eef1f4;color:#5b6675;}
+  .badge.b-invest{background:#e5eefb;color:#1f5896;}
+
+  .stepper{display:flex;align-items:center;gap:4px;}
+  .step{flex:1;height:6px;border-radius:99px;background:#e6ebf1;position:relative;}
+  .step.done{background:var(--green);}
+  .step.active{background:var(--amber);}
+  .stage-labels{display:flex;justify-content:space-between;font-size:9.5px;color:var(--grey-mid);font-weight:600;margin-top:6px;}
+
+  .cost-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .cost-chip{font-family:'JetBrains Mono',monospace;font-size:11px;background:#f5f7fa;border:1px solid #e5eaf0;color:var(--navy-800);padding:5px 9px;border-radius:7px;}
+
+  .doc-row{display:flex;gap:14px;margin-top:auto;padding-top:8px;border-top:1px solid #f0f3f6;}
+  .doc-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
+  .doc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .doc-dot.ok{background:var(--green);}
+  .doc-dot.pending{background:#d7dee6;}
+
+  /* ---------- Methodology ---------- */
+  .method-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;}
+  .method-row::before{
+    content:"";position:absolute;top:34px;left:8%;right:8%;height:2px;background:repeating-linear-gradient(90deg,var(--grey-line) 0 8px, transparent 8px 16px);
+  }
+  .method-card{position:relative;z-index:1;}
+  .method-num{
+    width:68px;height:68px;border-radius:50%;background:var(--card);border:2px solid var(--navy-900);
+    display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;
+    font-size:22px;color:var(--navy-900);margin-bottom:20px;box-shadow:var(--shadow-sm);
+  }
+  .method-card:nth-child(2) .method-num{border-color:var(--amber-dark);color:var(--amber-dark);}
+  .method-card:nth-child(3) .method-num{border-color:var(--sky);color:#1c6f96;}
+  .method-card:nth-child(4) .method-num{border-color:var(--green);color:#1c7a4e;}
+  .method-card h4{font-size:16.5px;margin:0 0 14px;color:var(--navy-950);}
+  .method-card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .method-card li{font-size:13.5px;color:var(--ink-soft);line-height:1.4;padding-left:16px;position:relative;}
+  .method-card li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--grey-line);}
+
+  /* ---------- Quick win comparison ---------- */
+  .compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .vendor-card{background:var(--card);border-radius:14px;padding:26px 20px;border:1px solid #e7edf3;box-shadow:var(--shadow-sm);text-align:center;}
+  .vendor-card.win{
+    background:linear-gradient(180deg,#0e2a48,#0b2038);color:#fff;border-color:transparent;box-shadow:var(--shadow-lg);
+    transform:scale(1.045);position:relative;
+  }
+  .vendor-card.win::after{
+    content:"Elegido";position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+    background:var(--amber);color:#3a1f04;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.02em;
+  }
+  .vendor-name{font-weight:700;font-size:15px;margin-bottom:18px;}
+  .vendor-card.win .vendor-name{color:#fff;}
+  .v-metric{margin-bottom:14px;}
+  .v-metric .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--grey-mid);font-weight:700;}
+  .vendor-card.win .v-metric .k{color:#9fb2c9;}
+  .v-metric .v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15.5px;margin-top:3px;color:var(--navy-950);}
+  .vendor-card.win .v-metric .v{color:#fff;}
+  .compare-note{margin-top:28px;background:#eef4fb;border-radius:12px;padding:18px 22px;font-size:14px;color:var(--navy-800);line-height:1.55;}
+  .compare-note b{color:var(--navy-950);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,15,27,0.6);backdrop-filter:blur(3px);
+    display:flex;align-items:center;justify-content:center;padding:24px;z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .22s;
+  }
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .modal{
+    position:relative;background:var(--card);border-radius:20px;max-width:620px;width:100%;max-height:86vh;overflow-y:auto;
+    padding:36px 38px 32px;box-shadow:var(--shadow-lg);transform:translateY(14px) scale(.98);transition:transform .22s;
+  }
+  .overlay.show .modal{transform:translateY(0) scale(1);}
+  .modal-close{
+    position:absolute;top:20px;right:20px;background:#f0f3f6;border:none;width:34px;height:34px;border-radius:50%;
+    font-size:16px;cursor:pointer;color:var(--ink-soft);
+  }
+  .modal h3{margin:0 0 6px;font-size:22px;color:var(--navy-950);}
+  .modal .modal-sub{color:var(--grey-mid);font-size:13px;font-weight:600;margin-bottom:20px;}
+  .modal-section{margin-bottom:20px;}
+  .modal-section h5{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--amber-dark);margin:0 0 10px;font-weight:700;}
+  .modal-section p{margin:0;font-size:14.5px;color:var(--ink-soft);line-height:1.6;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag-list span{background:#f2f5f8;border-radius:8px;padding:6px 11px;font-size:12.5px;color:var(--navy-800);font-weight:500;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--navy-950);color:#93a4ba;padding:44px 0;font-size:13px;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  @media (max-width:980px){
+    .units-row{grid-template-columns:1fr;}
+    .proj-grid{grid-template-columns:1fr 1fr;}
+    .method-row{grid-template-columns:1fr 1fr;row-gap:36px;}
+    .method-row::before{display:none;}
+    .compare-grid{grid-template-columns:1fr 1fr;}
+    .progress-panel{grid-template-columns:1fr;}
+  }
+  @media (max-width:680px){
+    section{padding:64px 0;}
+    .wrap{padding:0 20px;}
+    nav.links{display:none;}
+    .nav-toggle{display:block;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .proj-grid{grid-template-columns:1fr;}
+    .compare-grid{grid-template-columns:1fr;}
+    .method-row{grid-template-columns:1fr;}
+    .modal{padding:28px 22px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark">✈️</div>
+      <div>
+        Proyectos e Innovación
+        <small>Gerencia de Operaciones</small>
+      </div>
+    </div>
+    <nav class="links" id="navLinks">
+      <a href="#resumen">Resumen</a>
+      <a href="#organigrama">Organigrama</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#metodologia">Metodología</a>
+      <a href="#quickwin">Quick Win</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">☰</button>
+  </div>
+</header>
+
+<section class="hero" id="resumen">
+  <div class="hero-grid"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-tag"><span class="dot"></span> Inventario actualizado · Avances del área</div>
+    <h1>Todo lo que estamos <em>construyendo</em>, en un solo lugar.</h1>
+    <p class="lead">Un mapa completo de las aplicaciones que usa cada equipo de Operaciones, el estado real de cada proyecto y cómo trabajamos para llevarlos de la idea a producción.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="num" data-count="18">0</div><div class="lbl">Proyectos documentados</div></div>
+      <div class="stat"><div class="num" data-count="3">0</div><div class="lbl">Visores</div></div>
+      <div class="stat"><div class="num" data-count="3">0</div><div class="lbl">Ejecutables</div></div>
+      <div class="stat"><div class="num" data-count="11">0</div><div class="lbl">AppSheets</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="avance">
+  <div class="wrap">
+    <p class="eyebrow reveal">Situación actual</p>
+    <h2 class="section-title reveal">¿Qué tan avanzados están?</h2>
+    <p class="section-sub reveal">Así va el trabajo acumulado de los 18 proyectos documentados, medido por etapa.</p>
+    <div class="progress-panel reveal">
+      <div class="bars">
+        <div class="bar-row"><span class="label">Levantar requerimientos</span><div class="bar-track"><div class="bar-fill" data-pct="100"></div></div><span class="pct">100%</span></div>
+        <div class="bar-row"><span class="label">Funcional</span><div class="bar-track"><div class="bar-fill" data-pct="100"></div></div><span class="pct">100%</span></div>
+        <div class="bar-row"><span class="label">Documentación</span><div class="bar-track"><div class="bar-fill" data-pct="100"></div></div><span class="pct">100%</span></div>
+        <div class="bar-row"><span class="label">Corrección de errores</span><div class="bar-track"><div class="bar-fill warn" data-pct="75"></div></div><span class="pct">75%</span></div>
+        <div class="bar-row"><span class="label">Construcción de proyecto</span><div class="bar-track"><div class="bar-fill" data-pct="100"></div></div><span class="pct">100%</span></div>
+      </div>
+      <div class="progress-note">
+        <h4>Lectura rápida</h4>
+        <p>Los requerimientos, el desarrollo funcional, la documentación y la construcción están al 100% en los proyectos ya cerrados. El único punto abierto es la corrección de errores (75%), donde seguimos afinando detalles antes de dar por cerrado el ciclo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="organigrama" style="background:#eef2f6;">
+  <div class="wrap">
+    <p class="eyebrow reveal">¿Quién usa qué?</p>
+    <h2 class="section-title reveal">Un app por cada trabajo, un dueño por cada área</h2>
+    <p class="section-sub reveal">Toca una unidad de negocio para ver sus áreas y las aplicaciones que usa cada una. Las fichas con ⭐ son los proyectos que estamos construyendo ahora mismo — tócalas para ver el detalle.</p>
+
+    <div class="orgchart reveal">
+      <div class="gerencia-pill">GERENCIA DE OPERACIONES</div>
+      <div class="connector"></div>
+      <div class="units-row" id="unitsRow"></div>
+    </div>
+
+    <div class="legend-row reveal">
+      <span class="swatch"><i style="background:#eef4fb;border:1px solid #dde8f3;"></i> Aplicación en uso</span>
+      <span class="swatch"><i style="background:linear-gradient(135deg,#fff4e2,#ffe6c2);border:1px solid #f2cd8f;"></i> ⭐ Proyecto en construcción (tócalo)</span>
+    </div>
+  </div>
+</section>
+
+<section id="proyectos">
+  <div class="wrap">
+    <p class="eyebrow reveal">Proyectos principales</p>
+    <h2 class="section-title reveal">El estado real de cada proyecto</h2>
+    <p class="section-sub reveal">Sin tecnicismos: qué tan avanzado está, cuánto ha costado y qué documentos ya tenemos listos. Toca cualquier tarjeta para ver el detalle completo.</p>
+    <div class="proj-grid" id="projGrid"></div>
+  </div>
+</section>
+
+<section id="metodologia" style="background:#eef2f6;">
+  <div class="wrap">
+    <p class="eyebrow reveal">Cómo trabajamos</p>
+    <h2 class="section-title reveal">De la idea a producción, en cuatro pasos</h2>
+    <p class="section-sub reveal">La misma metodología se repite en cada proyecto, sin importar su tamaño.</p>
+    <div class="method-row" id="methodRow"></div>
+  </div>
+</section>
+
+<section id="quickwin">
+  <div class="wrap">
+    <p class="eyebrow reveal">Quick win · App de Contingencias y RMS</p>
+    <h2 class="section-title reveal">Por qué construimos internamente</h2>
+    <p class="section-sub reveal">Antes de desarrollar, comparamos cotizar con proveedores externos frente a construirlo con nuestro propio equipo.</p>
+    <div class="compare-grid reveal" id="compareGrid"></div>
+    <div class="compare-note reveal">
+      <b>Resultado:</b> el mismo alcance que Delfosti cotizó en $43,690 y 18 semanas, lo entregamos con el equipo interno de SAASA por <b>S/ 3,000</b> en <b>4 semanas</b>, con mantenimiento a costo cero.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Área de Proyectos e Innovación · Gerencia de Operaciones</span>
+    <span>Generado a partir del inventario de avances del área</span>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+
+const UNITS = [
+  {
+    id:'rampa', name:'Unidad de Negocio de Rampa', owner:'Daniel Picón', icon:'🛬', color:'#1a3f70',
+    areas:[
+      {name:'Operaciones Rampa', owner:'Hugo Namuche', apps:[{n:'App de Cabina y Equipaje'}]},
+      {name:'Mantenimiento', owner:'Mario Ruiz', apps:[
+        {n:'App de combustible'},{n:'App checklist de equipos'},{n:'App de reportes de fallas'},
+        {n:'App de registro combustible v2'},{n:'Visor de Kardex Combustible'}
+      ]},
+      {name:'Despacho', owner:'Carlos Tantaruna', apps:[
+        {n:'App de Datos Generales de vuelo'},{n:'App para crear itinerarios'}
+      ]},
+      {name:'CCO', owner:'Carlos La Torre', apps:[
+        {n:'App BRS', star:true, key:'brs'},{n:'RMS', star:true, key:'rms'},
+        {n:'BDS', star:true, key:'bds'},{n:'PRM Beacons', star:true, key:'prm'}
+      ]}
+    ]
+  },
+  {
+    id:'carga', name:'Unidad de Negocio de Carga', owner:'Yessy Hernández', icon:'📦', color:'#8a5713',
+    areas:[
+      {name:'Operaciones Carga', owner:'Jean Mera', apps:[
+        {n:'App de recepción de vuelos de importación'},{n:'App de Checklist ULS'},{n:'App Carga Nacional'}
+      ]},
+      {name:'Operaciones Aduaneras', owner:'Jhon Albert', apps:[
+        {n:'Ejecutables Guías consolidadas'},{n:'Ejecutables Guías Directas'}
+      ]},
+      {name:'Atención al Cliente', owner:'Mercedes Marrujo', apps:[]},
+      {name:'GHA', owner:'Coordinación general', apps:[
+        {n:'App Actividades en PEA'},{n:'Notificaciones por correo (ATA, Descarga, Embarque)'},
+        {n:'Cargo Track 2.0', star:true, key:'cargotrack'}
+      ], sub:[
+        'GHA KLM / Air France · Jannet Quispe','GHA Aercaribe · Rafael Romero','GHA Iberia · Hugo Conde',
+        'GHA KE/AM/U7 · Oswaldo Santos','GHA DHL · Dino Padilla'
+      ]}
+    ]
+  },
+  {
+    id:'fbo', name:'Unidad de Negocio FBO', owner:'Yahaira Castro / Óscar Jara', icon:'🧳', color:'#1c6f96',
+    areas:[
+      {name:'Operaciones FBO', owner:'Diego Castillo', apps:[
+        {n:'Tablero de demoras'},{n:'Tablero de asistencias'},{n:'Pizarra del control de recursos'},
+        {n:'App FBO estaciones SSR'},{n:'App de contingencias', star:true, key:'contingencias'},
+        {n:'App silla de ruedas', star:true, key:'sillaruedas'},{n:'BDS', star:true, key:'bds'},{n:'PRM Beacons', star:true, key:'prm'}
+      ]}
+    ]
+  }
+];
+
+const PROJECTS = [
+  {
+    key:'cargotrack', name:'Cargo Track 2.0', unit:'Unidad de Carga · GHA', badge:'En Kickoff', badgeClass:'b-progress',
+    stages:['Kickoff','Sprint 1','Sprint 2','Mantenim.','Doc. y Legal'],
+    stageState:['active','pending','pending','pending','active'],
+    costs:['Aún sin costo asignado (S/0)'],
+    docs:{codigo:false, memoria:false, manual:false},
+    tasks:['Desarrollo de prototipo','Desarrollo de web services','Configuración de infraestructura','Configurar SLA','Reunión con otras áreas','Mapeo de procesos','Desarrollo de backend'],
+    note:'Proyecto insignia para seguimiento de carga con las aerolíneas GHA. Está en etapa de diseño: se está definiendo el prototipo y la arquitectura antes de empezar a construir.'
+  },
+  {
+    key:'contingencias', name:'App de Contingencias', unit:'Unidad FBO · Operaciones FBO', badge:'Entregado', badgeClass:'b-live',
+    stages:['Kickoff','Sprint 1','Sprint 2','Mantenim.','Doc. y Legal'],
+    stageState:['done','done','done','active','active'],
+    costs:['Kickoff–Sprint2: S/0','Mantenimiento: S/ 270'],
+    docs:{codigo:true, memoria:true, manual:true},
+    tasks:['Configuración de backend e infraestructura','Autenticación de usuarios y proveedores','Función de escáner','Función de envío de PDF','Servidor en AWS con dominio interno','Pruebas de calidad (QA) con equipo FBO','Entrega del aplicativo'],
+    note:'Ya está en manos del equipo FBO y en mantenimiento. Construida 100% en casa: el mismo alcance que un proveedor externo cotizó hasta en $43,690 lo entregamos a una fracción del costo.'
+  },
+  {
+    key:'bds', name:'BDS', unit:'Rampa · CCO / FBO', badge:'Pendiente de iniciar', badgeClass:'b-pending',
+    stages:['Kickoff','Sprint 1','Sprint 2','Mantenim.','Doc. y Legal'],
+    stageState:['pending','pending','pending','pending','pending'],
+    costs:['Sin costo asignado aún'],
+    docs:{codigo:false, memoria:false, manual:false},
+    tasks:['Reunión con otras áreas','Mapeo de procesos','Desarrollo de backend','Infraestructura'],
+    note:'En cola de priorización. Los pasos de descubrimiento (reuniones y mapeo de procesos) todavía no arrancan.'
+  },
+  {
+    key:'contingencias2', name:'App de Contingencias · Multi-estación (v2)', unit:'Unidad FBO', badge:'Iniciando', badgeClass:'b-progress',
+    stages:['Kickoff','Sprint 1','Sprint 2','Mantenim.','Doc. y Legal'],
+    stageState:['active','pending','pending','pending','pending'],
+    costs:['Kickoff: S/0','Resto: por definir'],
+    docs:{codigo:false, memoria:false, manual:false},
+    tasks:['Diseño de base de datos','Diseño de interfaces de usuario','Configuración de backend'],
+    note:'Segunda versión de la App de Contingencias, pensada para replicarse en más estaciones además de la actual.'
+  },
+  {
+    key:'brs', name:'BRS', unit:'Rampa · CCO', badge:'Fase 1 en negociación', badgeClass:'b-invest',
+    stages:['Fase 1','Doc. y Legal','Fase 2','Mantenim.'],
+    stageState:['active','pending','pending','pending'],
+    costs:['Fase 1: S/ 1,200','Doc. y Legal: ~S/ 39,000 (pendiente)','Fase 2: S/ 65,000 +IGV','Mantenimiento: recurrente mensual'],
+    docs:{codigo:false, memoria:false, manual:false},
+    tasks:['Aplicación web móvil','API backend','Plataforma web','Servidor VPS con dominio interno','Corrección de bugs','Disponibilidad para 500 usuarios + 1 casilla SITA'],
+    note:'El proyecto de mayor inversión evaluado hasta ahora: un sistema completo de check-in / boarding (BRS).'
+  },
+  {
+    key:'prm', name:'PRM', unit:'Rampa · CCO', badge:'En ejecución', badgeClass:'b-invest',
+    stages:['Kickoff','Sprint1 F1','Sprint1 F2','Sprint 2 (9 sem.)','Sprint 3','Mantenim.'],
+    stageState:['done','done','done','active','pending','pending'],
+    costs:['Sprint 1 – Fase 1: S/ 19,650','Sprint 1 – Fase 2: S/ 18,900','Sprint 2 (9 semanas): S/ 38,800 +IGV','Doc. y Legal: S/ 4,319.30','Mantenimiento: S/ 490 +IGV / mes'],
+    docs:{codigo:false, memoria:false, manual:false},
+    tasks:['Integración con API SIGA Latam (inestable)','Lectura de tarjetas de embarque y códigos QR','Bot de WhatsApp para mensajes de asignación','Actualización de movimientos y flujos de salida/llegada','Servidor VPS e infraestructura para el bot','Soporte para hasta 1,000 usuarios'],
+    note:'El proyecto con mayor inversión ejecutada hasta el momento. Ya está operando y recibe mejoras continuas — el Sprint 2 lleva 9 semanas de trabajo.'
+  },
+  {
+    key:'rms', name:'RMS', unit:'Rampa · CCO', badge:'En construcción', badgeClass:'b-progress',
+    stages:['Kickoff','Sprint 1','Sprint 2','Mantenim.','Doc. y Legal'],
+    stageState:['active','pending','pending','pending','active'],
+    costs:['Código fuente: $ 500','Resto de fases: S/0'],
+    docs:{codigo:true, memoria:false, manual:true},
+    tasks:['Diseño de base de datos','Diseño de prototipos','Construcción de la plataforma','Pruebas de funcionalidad con Rampa','Consumo de datos desde FlyRadar','Entrega del aplicativo'],
+    note:'Compite con propuestas externas de hasta $43,690: ya contamos con código fuente propio por solo $500.'
+  }
+];
+
+const METHOD = [
+  {n:'01', title:'Nos ponemos de acuerdo', items:['Reuniones con los usuarios','Sprint Planning (lunes)','Elaborar lista de tareas — backlog','Daily de 15 min (martes y jueves)']},
+  {n:'02', title:'Construimos poco a poco', items:['Boceto / prototipo visual','Arquitectura técnica','Construcción + pruebas','Demo + retrospectiva']},
+  {n:'03', title:'Lanzamos al mundo real', items:['UA con usuarios reales','Despliegue a producción','Ciclo continuo de sprints','Métricas de velocidad']},
+  {n:'04', title:'Cuidamos el sistema', items:['Documentación técnica','Manual de usuario','Corrección de errores','Mejoras de uso real']}
+];
+
+const VENDORS = [
+  {name:'Portal Labs', inv:'$ 9,411 con IGV', mant:'S/ 690', time:'4 semanas'},
+  {name:'KMC Group', inv:'$ 21,835 sin IGV', mant:'No especifica', time:'9.5 semanas'},
+  {name:'Delfosti', inv:'$ 43,690 sin IGV', mant:'No especifica', time:'18 semanas'},
+  {name:'SAASA (interno)', inv:'S/ 3,000', mant:'S/ 0', time:'4 semanas', win:true}
+];
+
+/* ============ RENDER ============ */
+
+function renderUnits(){
+  const row = document.getElementById('unitsRow');
+  row.innerHTML = UNITS.map(u => `
+    <div class="unit-card" data-unit="${u.id}">
+      <div class="unit-head" onclick="toggleUnit('${u.id}')">
+        <div class="unit-icon" style="background:${u.color}">${u.icon}</div>
+        <div>
+          <h4>${u.name}</h4>
+          <span class="owner">${u.owner}</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="unit-body">
+        ${u.areas.map(a => `
+          <div class="area-block">
+            <p class="area-title">${a.name}</p>
+            <p class="area-owner">${a.owner}</p>
+            ${a.apps.length ? `<div class="app-list">${a.apps.map(app => appChip(app)).join('')}</div>` : `<p style="font-size:12px;color:var(--grey-mid);margin:0;">Sin aplicaciones asignadas</p>`}
+            ${a.sub ? `<div class="gha-sub"><p class="area-owner" style="margin-bottom:6px;">Aerolíneas atendidas</p><div class="app-list">${a.sub.map(s=>`<span class="app-chip">${s}</span>`).join('')}</div></div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function appChip(app){
+  if(app.star){
+    return `<span class="app-chip star" onclick="openProject('${app.key}')"><span class="star-ico">⭐</span>${app.n}</span>`;
+  }
+  return `<span class="app-chip">${app.n}</span>`;
+}
+
+function toggleUnit(id){
+  const card = document.querySelector(`.unit-card[data-unit="${id}"]`);
+  card.classList.toggle('open');
+}
+
+function stageBadgeClass(state){
+  if(state==='done') return 'done';
+  if(state==='active') return 'active';
+  return '';
+}
+
+function renderProjects(){
+  const grid = document.getElementById('projGrid');
+  grid.innerHTML = PROJECTS.map(p => `
+    <div class="proj-card" onclick="openProject('${p.key}')">
+      <div class="proj-top">
+        <div>
+          <h4>${p.name}</h4>
+          <div class="proj-unit">${p.unit}</div>
+        </div>
+        <span class="badge ${p.badgeClass}">${p.badge}</span>
+      </div>
+      <div>
+        <div class="stepper">
+          ${p.stageState.map(s=>`<div class="step ${stageBadgeClass(s)}"></div>`).join('')}
+        </div>
+        <div class="stage-labels">
+          ${p.stages.map(s=>`<span>${s}</span>`).join('')}
+        </div>
+      </div>
+      <div class="cost-chips">
+        ${p.costs.map(c=>`<span class="cost-chip">${c}</span>`).join('')}
+      </div>
+      <div class="doc-row">
+        <div class="doc-item"><span class="doc-dot ${p.docs.codigo?'ok':'pending'}"></span>Código</div>
+        <div class="doc-item"><span class="doc-dot ${p.docs.memoria?'ok':'pending'}"></span>Memoria</div>
+        <div class="doc-item"><span class="doc-dot ${p.docs.manual?'ok':'pending'}"></span>Manual</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMethod(){
+  const row = document.getElementById('methodRow');
+  row.innerHTML = METHOD.map(m => `
+    <div class="method-card">
+      <div class="method-num">${m.n}</div>
+      <h4>${m.title}</h4>
+      <ul>${m.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+}
+
+function renderVendors(){
+  const grid = document.getElementById('compareGrid');
+  grid.innerHTML = VENDORS.map(v => `
+    <div class="vendor-card ${v.win?'win':''}">
+      <div class="vendor-name">${v.name}</div>
+      <div class="v-metric"><div class="k">Inversión</div><div class="v">${v.inv}</div></div>
+      <div class="v-metric"><div class="k">Mantenimiento</div><div class="v">${v.mant}</div></div>
+      <div class="v-metric"><div class="k">Tiempo</div><div class="v">${v.time}</div></div>
+    </div>
+  `).join('');
+}
+
+/* ============ MODAL ============ */
+
+function openProject(key){
+  const p = PROJECTS.find(x=>x.key===key);
+  if(!p) return;
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h3>${p.name}</h3>
+    <div class="modal-sub">${p.unit} · <span class="badge ${p.badgeClass}">${p.badge}</span></div>
+    <div class="modal-section">
+      <h5>Avance por etapa</h5>
+      <div class="stepper">${p.stageState.map(s=>`<div class="step ${stageBadgeClass(s)}"></div>`).join('')}</div>
+      <div class="stage-labels">${p.stages.map(s=>`<span>${s}</span>`).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h5>Inversión</h5>
+      <div class="tag-list">${p.costs.map(c=>`<span>${c}</span>`).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h5>Documentación</h5>
+      <div class="tag-list">
+        <span>${p.docs.codigo?'✅':'⏳'} Código fuente</span>
+        <span>${p.docs.memoria?'✅':'⏳'} Memoria descriptiva</span>
+        <span>${p.docs.manual?'✅':'⏳'} Manual de usuario</span>
+      </div>
+    </div>
+    <div class="modal-section">
+      <h5>En qué se está trabajando</h5>
+      <div class="tag-list">${p.tasks.map(t=>`<span>${t}</span>`).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h5>Resumen</h5>
+      <p>${p.note}</p>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('show');
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', e=>{ if(e.target.id==='overlay') closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+/* ============ INIT ============ */
+renderUnits();
+renderProjects();
+renderMethod();
+renderVendors();
+// open first unit by default
+document.querySelector('.unit-card')?.classList.add('open');
+
+/* ---- counters ---- */
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target = parseInt(el.getAttribute('data-count'),10);
+    let cur = 0;
+    const step = Math.max(1, Math.round(target/40));
+    const t = setInterval(()=>{
+      cur += step;
+      if(cur>=target){cur=target; clearInterval(t);}
+      el.textContent = cur;
+    }, 28);
+  });
+}
+
+/* ---- bar fills ---- */
+function animateBars(){
+  document.querySelectorAll('.bar-fill').forEach(el=>{
+    const pct = el.getAttribute('data-pct');
+    requestAnimationFrame(()=>{ el.style.width = pct+'%'; });
+  });
+}
+
+/* ---- reveal on scroll ---- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      if(e.target.id==='resumen' || e.target.closest('.hero')) animateCounters();
+      if(e.target.id==='avance' || e.target.querySelector('.bar-fill')) animateBars();
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// counters trigger independently since hero has no .reveal class
+const heroObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animateCounters(); heroObs.disconnect(); } });
+},{threshold:0.3});
+heroObs.observe(document.querySelector('.stat-row'));
+
+const barsObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animateBars(); barsObs.disconnect(); } });
+},{threshold:0.3});
+barsObs.observe(document.querySelector('.bars'));
+
+/* ---- nav active state + mobile toggle ---- */
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', ()=>{
+  const isOpen = navLinks.style.display === 'flex';
+  navLinks.style.display = isOpen ? 'none' : 'flex';
+  navLinks.style.cssText += isOpen ? '' : 'position:fixed;top:68px;left:0;right:0;background:#0b2038;flex-direction:column;padding:12px 24px;gap:2px;';
+});
+document.querySelectorAll('nav.links a').forEach(a=>{
+  a.addEventListener('click', ()=>{ if(window.innerWidth<=680){ navLinks.style.display='none'; } });
+});
+</script>
+</body>
+</html>
